@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  RouterProvider,
+  Outlet,
+  createHashRouter,
+  Route,
+  createRoutesFromElements,
+} from 'react-router-dom';
+import { Layout as LayoutAnt } from 'antd';
+import { Admin, Home, Navbar, Profile } from './components/index';
+
+const { Content } = LayoutAnt;
+
+const routing = createHashRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<Layout />}>
+      <Route path="/" element={<Home />} />
+      <Route path="/admin" element={<Admin />} />
+      <Route path="/profile" element={<Profile />} />
+    </Route>
+  )
+);
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  return <RouterProvider router={routing} />;
 }
 
 export default App;
+
+function Layout() {
+  return (
+    <Content style={{ minHeight: '100vh' }}>
+      <Navbar />
+      <Outlet />
+    </Content>
+  );
+}
