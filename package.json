@@ -45,6 +45,6 @@
   },
   "devDependencies": {
     "gh-pages": "^6.1.1",
-    "supabase": "^1.176.10"
+    "supabase": "1.172.2"
   }
 }
