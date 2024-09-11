@@ -1,37 +1,73 @@
-.app-header {
+/* styles.css */
+.navbar {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.logo {
-  color: white;
-  font-size: 24px;
-}
-
-.menu {
+.navbar-left,
+.navbar-center,
+.navbar-right {
   display: flex;
   align-items: center;
 }
 
-.menu-button {
+.navbar-left {
+  flex: 1;
+}
+
+.navbar-center {
+  flex: 1;
+  justify-content: center;
+}
+
+.navbar-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.navbar-right {
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.navbar-icon {
+  font-size: 24px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.navbar-mobile-menu {
   display: none;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
-  .menu-button {
-    display: block;
-    color: white;
-    border: none;
-    background: none;
+  .navbar-left {
+    justify-content: flex-start;
   }
 
-  .logo {
-    margin: 0 auto;
+  .navbar-center {
+    display: flex;
+    justify-content: center; /* Center the T Shirt label on mobile */
   }
 
-  .menu {
+  .navbar-right {
+    justify-content: flex-end;
+  }
+
+  .menu-icon {
+    display: block; /* Show hamburger icon on mobile */
+  }
+
+  .navbar-title {
+    margin: 0 auto; /* Center the title */
+  }
+
+  .navbar-mobile-menu {
     display: none;
   }
 }
