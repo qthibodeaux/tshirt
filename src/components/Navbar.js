@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import { useRecoilValue } from 'recoil';
 import { cartItemCount, sessionState } from '../atoms/state'; // Import Recoil states
-import './Navbar.css';
+import '../styles/Navbar.css';
 
 const Navbar = () => {
   const session = useRecoilValue(sessionState);
@@ -30,48 +30,50 @@ const Navbar = () => {
   const closeDrawer = () => setDrawerVisible(false);
 
   return (
-    <nav className="navbar">
-      {/* Mobile Menu Icon */}
-      <div className="navbar-left">
-        <MenuOutlined className="menu-icon" onClick={showDrawer} />
-      </div>
+    <div className="navbar-wrapper">
+      <nav className="navbar">
+        {/* Mobile Menu Icon */}
+        <div className="navbar-left">
+          <MenuOutlined className="menu-icon" onClick={showDrawer} />
+        </div>
 
-      {/* Centered Title for Mobile */}
-      <div className="navbar-center">
-        <span className="navbar-title">T Shirt</span>
-      </div>
+        {/* Centered Title for Mobile */}
+        <div className="navbar-center">
+          <span className="navbar-title">T Shirt</span>
+        </div>
 
-      {/* Right Side Icons */}
-      <div className="navbar-right">
-        {/* Account Icon with Hover Dropdown */}
-        <Dropdown
-          overlay={accountMenu}
-          trigger={['hover']}
-          placement="bottomRight"
+        {/* Right Side Icons */}
+        <div className="navbar-right">
+          {/* Account Icon with Hover Dropdown */}
+          <Dropdown
+            overlay={accountMenu}
+            trigger={['hover']}
+            placement="bottomRight"
+          >
+            <UserOutlined className="navbar-icon" />
+          </Dropdown>
+
+          {/* Cart Icon with Badge */}
+          <Badge count={itemCount} overflowCount={99} offset={[10, 0]}>
+            <ShoppingCartOutlined className="navbar-icon" />
+          </Badge>
+        </div>
+
+        {/* Drawer for Mobile Menu */}
+        <Drawer
+          title="Menu"
+          placement="left"
+          onClose={closeDrawer}
+          visible={drawerVisible}
         >
-          <UserOutlined className="navbar-icon" />
-        </Dropdown>
-
-        {/* Cart Icon with Badge */}
-        <Badge count={itemCount} overflowCount={99} offset={[10, 0]}>
-          <ShoppingCartOutlined className="navbar-icon" />
-        </Badge>
-      </div>
-
-      {/* Drawer for Mobile Menu */}
-      <Drawer
-        title="Menu"
-        placement="left"
-        onClose={closeDrawer}
-        visible={drawerVisible}
-      >
-        {!session && (
-          <Button type="primary" block>
-            Join
-          </Button>
-        )}
-      </Drawer>
-    </nav>
+          {!session && (
+            <Button type="primary" block>
+              Join
+            </Button>
+          )}
+        </Drawer>
+      </nav>
+    </div>
   );
 };
 

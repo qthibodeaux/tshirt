@@ -25,3 +25,8 @@ export const cartItemCount = selector({
     return cart.length;
   },
 });
+
+export const userRoleState = atom({
+  key: 'userRoleState',
+  default: null, // Default value, null means no role assigned
+});
