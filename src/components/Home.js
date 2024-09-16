@@ -13,6 +13,7 @@ function Home() {
   const goToProfile = () => navigate('/profile');
   const goToRegister = () => navigate('/register');
   const goToAdmin = () => navigate('/admin');
+  const goToProduct = () => navigate('/product');
 
   // Handler to log the session
   const logSession = async () => {
@@ -39,6 +40,9 @@ function Home() {
         </Button>
         <Button onClick={logSession} type="default">
           Log Session
+        </Button>
+        <Button onClick={goToProduct} type="default">
+          Product
         </Button>
       </div>
 

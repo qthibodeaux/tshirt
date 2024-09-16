@@ -11,31 +11,42 @@ function AuthCallback() {
   const setProfile = useSetRecoilState(profileState);
 
   useEffect(() => {
-    // Extract the parameters from the URL
-    const params = new URLSearchParams(location.hash.substring(1)); // For hash-based routing
-    const accessToken = params.get('access_token');
-    const refreshToken = params.get('refresh_token');
+    const handleAuthCallback = async () => {
+      // Extract the parameters from the URL
+      const params = new URLSearchParams(location.hash.substring(1)); // For hash-based routing
+      const accessToken = params.get('access_token');
+      const refreshToken = params.get('refresh_token');
 
-    // If the tokens exist, set the session
-    if (accessToken) {
-      supaClient.auth
-        .setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-        })
-        .then(({ data, error }) => {
+      if (accessToken && refreshToken) {
+        try {
+          const { data, error } = await supaClient.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+
           if (error) {
-            console.error('Error setting session:', error);
+            console.error('Error setting session:', error.message);
+            // Provide user feedback
+            alert('Authentication failed. Please try again.');
+            navigate('/');
           } else {
             console.log('Session set successfully:', data.session);
             setSession(data.session);
             navigate('/welcome'); // Navigate to the welcome page
           }
-        });
-    } else {
-      console.error('No access token found in the URL');
-      navigate('/'); // Redirect to home or another route if tokens are not found
-    }
+        } catch (error) {
+          console.error('Unexpected error:', error.message);
+          alert('An unexpected error occurred. Please try again.');
+          navigate('/');
+        }
+      } else {
+        console.error('No access token found in the URL');
+        alert('Invalid authentication link. Please try again.');
+        navigate('/');
+      }
+    };
+
+    handleAuthCallback();
   }, [location, navigate, setSession, setProfile]);
 
   return <div>Processing authentication...</div>; // Add a loader or similar feedback to the user

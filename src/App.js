@@ -9,14 +9,16 @@ import { Layout as LayoutAnt } from 'antd';
 import {
   Admin,
   AuthCallback,
+  Cart,
   Home,
   Navbar,
+  Product,
   Profile,
-  ProtectedRoute,
   Register,
   TempState,
   Welcome,
 } from './components/index';
+import { AuthProvider } from './useSession';
 
 const { Content } = LayoutAnt;
 
@@ -25,11 +27,9 @@ const routing = createHashRouter(
     <Route path="/" element={<Layout />}>
       <Route path="/" element={<Home />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/product" element={<Product />} />
       <Route path="/profile" element={<Profile />} />
-      <Route
-        path="/admin"
-        element={<ProtectedRoute element={Admin} requiredRole="admin" />}
-      />
       <Route path="/register" element={<Register />} />
       <Route path="/welcome" element={<Welcome />} />
       <Route path="/auth-callback" element={<AuthCallback />} />
@@ -45,10 +45,12 @@ export default App;
 
 function Layout() {
   return (
-    <Content style={{ minHeight: '100vh' }}>
-      <Navbar />
-      <Outlet />
-      <TempState />
-    </Content>
+    <AuthProvider>
+      <Content style={{ minHeight: '100vh' }}>
+        <Navbar />
+        <Outlet />
+        <TempState />
+      </Content>
+    </AuthProvider>
   );
 }

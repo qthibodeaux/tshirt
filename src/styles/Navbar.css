@@ -1,73 +1,35 @@
-/* styles.css */
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px;
-  background-color: #ffffff;
+.navbar-desktop {
+  width: 100%;
+  background-color: grey;
   border-bottom: 1px solid #f0f0f0;
 }
 
-.navbar-left,
-.navbar-center,
-.navbar-right {
+.desknav-contents {
+  max-width: 1080px; /* Set max width to 1080px */
+  margin: 0 auto; /* Center the contents horizontally */
   display: flex;
-  align-items: center;
+  justify-content: space-between; /* Space between left and right sections */
+  align-items: center; /* Align items vertically */
+  padding: 1.5rem 3rem; /* Add padding for spacing */
 }
 
-.navbar-left {
-  flex: 1;
-}
-
-.navbar-center {
-  flex: 1;
-  justify-content: center;
-}
-
-.navbar-title {
+.desknav-title {
   font-size: 18px;
   font-weight: bold;
 }
 
-.navbar-right {
-  flex: 1;
+.desknav-right {
+  display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
 
-.navbar-icon {
+.desknav-icon {
   font-size: 24px;
   margin-left: 20px;
   cursor: pointer;
 }
 
-.navbar-mobile-menu {
-  display: none;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .navbar-left {
-    justify-content: flex-start;
-  }
-
-  .navbar-center {
-    display: flex;
-    justify-content: center; /* Center the T Shirt label on mobile */
-  }
-
-  .navbar-right {
-    justify-content: flex-end;
-  }
-
-  .menu-icon {
-    display: block; /* Show hamburger icon on mobile */
-  }
-
-  .navbar-title {
-    margin: 0 auto; /* Center the title */
-  }
-
-  .navbar-mobile-menu {
-    display: none;
-  }
+.manage-account {
+  background-color: blueviolet;
 }
