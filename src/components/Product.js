@@ -1,30 +1,18 @@
-// Product.js
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { cartState } from '../atoms/state';
-import '../styles/Product.css'; // Assuming you have a separate CSS file
+import { Radio, Select, Button, InputNumber, notification } from 'antd'; // Import Ant Design components
+import '../styles/Product.css';
+
+const { Option } = Select;
 
 const Product = () => {
   const [cart, setCart] = useRecoilState(cartState);
   const [selectedDesign, setSelectedDesign] = useState(0); // For toggling designs
   const [selectedColor, setSelectedColor] = useState('');
-
-  // Store quantity for each size (both adult and child)
-  const [adultQuantities, setAdultQuantities] = useState({
-    XXXL: 0,
-    XXL: 0,
-    XL: 0,
-    L: 0,
-    M: 0,
-    S: 0,
-  });
-  const [childQuantities, setChildQuantities] = useState({
-    12: 0,
-    10: 0,
-    8: 0,
-    6: 0,
-    4: 0,
-  });
+  const [selectedSizeType, setSelectedSizeType] = useState(''); // Track whether adult or child is selected
+  const [selectedSize, setSelectedSize] = useState(''); // Track selected size
+  const [quantity, setQuantity] = useState(1); // Track quantity
 
   const products = [
     {
@@ -41,49 +29,55 @@ const Product = () => {
     },
   ];
 
-  const adultSizes = ['XXXL', 'XXL', 'XL', 'L', 'M', 'S'];
-  const childSizes = ['12', '10', '8', '6', '4'];
+  const sizes = ['XXL', 'XL', 'L', 'M', 'S']; // Common sizes for both adult and child
 
-  const handleQuantityChange = (size, value, isAdult) => {
-    if (isAdult) {
-      setAdultQuantities({ ...adultQuantities, [size]: value });
-    } else {
-      setChildQuantities({ ...childQuantities, [size]: value });
-    }
+  const openNotification = (productName, sizeType, size, quantity) => {
+    notification.success({
+      message: 'Added to Cart',
+      description: `${productName} (${sizeType} - ${size}) with quantity ${quantity} added to cart!`,
+      duration: 3, // Notification duration (in seconds)
+    });
   };
 
   const addToCart = (product) => {
-    const selectedSizes = {
-      adult: adultQuantities,
-      child: childQuantities,
-    };
-
     const item = {
       ...product,
       selectedColor,
-      selectedSizes,
+      selectedSizeType,
+      selectedSize,
+      quantity,
     };
 
     setCart([...cart, item]);
-    alert(`${product.name} added to cart!`);
+
+    // Show notification
+    openNotification(product.name, selectedSizeType, selectedSize, quantity);
   };
 
   return (
     <div className="product-container">
       {/* Toggle between designs */}
-      <div className="design-toggle">
-        <label htmlFor="design-select">Choose a Design:</label>
-        <select
-          id="design-select"
-          value={selectedDesign}
-          onChange={(e) => setSelectedDesign(Number(e.target.value))}
-        >
+      <div className="design-selection">
+        <label>Choose a Design:</label>
+        <div className="design-grid">
           {products.map((product, index) => (
-            <option key={product.id} value={index}>
-              {product.name}
-            </option>
+            <div key={product.id} className="design-option">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="product-design-image"
+              />
+              <div>
+                <Radio.Group
+                  onChange={() => setSelectedDesign(index)}
+                  value={selectedDesign}
+                >
+                  <Radio value={index}>{product.name}</Radio>
+                </Radio.Group>
+              </div>
+            </div>
           ))}
-        </select>
+        </div>
       </div>
 
       {/* Display selected design */}
@@ -99,68 +93,71 @@ const Product = () => {
       {/* Color Selector */}
       <div className="product-color-selector">
         <label htmlFor="color-select">Select Color:</label>
-        <select
+        <Select
           id="color-select"
           value={selectedColor}
-          onChange={(e) => setSelectedColor(e.target.value)}
+          onChange={(value) => setSelectedColor(value)}
+          placeholder="Choose Color"
         >
-          <option value="">Choose Color</option>
           {products[selectedDesign].availableColors.map((color) => (
-            <option key={color} value={color}>
+            <Option key={color} value={color}>
               {color}
-            </option>
+            </Option>
           ))}
-        </select>
+        </Select>
+      </div>
+
+      {/* Adult or Child Size Type Selector */}
+      <div className="size-type-selector">
+        <label>Choose Type:</label>
+        <Radio.Group
+          onChange={(e) => {
+            setSelectedSizeType(e.target.value);
+            setSelectedSize(''); // Reset size when switching type
+          }}
+          value={selectedSizeType}
+        >
+          <Radio value="adult">Adult</Radio>
+          <Radio value="child">Child</Radio>
+        </Radio.Group>
       </div>
 
       {/* Size Selector */}
-      <div className="product-size-selector">
-        <div className="size-section">
-          <div className="size-title">Adult Sizes</div>
-          <div className="size-row">
-            {adultSizes.map((size) => (
-              <div key={size} className="size-option">
-                <label>{size}</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={adultQuantities[size]}
-                  onChange={(e) =>
-                    handleQuantityChange(size, e.target.value, true)
-                  }
-                />
-              </div>
+      {selectedSizeType && (
+        <div className="product-size-selector">
+          <label>Choose Size:</label>
+          <Radio.Group
+            onChange={(e) => setSelectedSize(e.target.value)}
+            value={selectedSize}
+          >
+            {sizes.map((size) => (
+              <Radio key={size} value={size}>
+                {size}
+              </Radio>
             ))}
-          </div>
+          </Radio.Group>
         </div>
+      )}
 
-        <div className="size-section">
-          <div className="size-title">Child Sizes</div>
-          <div className="size-row">
-            {childSizes.map((size) => (
-              <div key={size} className="size-option">
-                <label>{size}</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={childQuantities[size]}
-                  onChange={(e) =>
-                    handleQuantityChange(size, e.target.value, false)
-                  }
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* Quantity Selector */}
+      <div className="product-quantity-selector">
+        <label>Quantity:</label>
+        <InputNumber
+          min={1}
+          value={quantity}
+          onChange={(value) => setQuantity(value)}
+        />
       </div>
 
       {/* Add to Cart Button */}
-      <button
+      <Button
+        type="primary"
         className="add-to-cart-button"
         onClick={() => addToCart(products[selectedDesign])}
+        disabled={!selectedSizeType || !selectedSize || quantity < 1} // Disable if no type, size, or invalid quantity
       >
         Add to Cart
-      </button>
+      </Button>
     </div>
   );
 };
