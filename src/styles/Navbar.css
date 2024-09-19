@@ -33,3 +33,43 @@
 .manage-account {
   background-color: blueviolet;
 }
+
+.navbar-mobile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.mobilenav-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem; /* Horizontal padding of 1rem */
+  width: 100%;
+}
+
+.mobilenav-center {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.mobilenav-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.mobilenav-right {
+  display: flex;
+  align-items: center;
+}
+
+.mobilenav-icon {
+  font-size: 20px;
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+.menu-icon {
+  font-size: 24px;
+}
