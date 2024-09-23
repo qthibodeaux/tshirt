@@ -19,16 +19,18 @@ export const cartState = atom({
     {
       id: 1,
       name: 'T-Shirt',
-      price: 19.99,
+      size: 'adult', // Specify the size (adult or kid)
+      price: 20, // Adult price
       quantity: 2,
       image: '/images/tshirt.jpg',
     },
     {
       id: 2,
-      name: 'Hat',
-      price: 9.99,
+      name: 'T-Shirt',
+      size: 'kid', // Specify the size (adult or kid)
+      price: 15, // Kid price
       quantity: 1,
-      image: '/images/hat.jpg',
+      image: '/images/tshirt_kid.jpg',
     },
   ],
 });

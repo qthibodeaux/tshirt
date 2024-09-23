@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Button,
-  Col,
-  Image,
-  Modal,
-  Row,
-  Radio,
-  Typography,
-  InputNumber,
-} from 'antd';
+import { Button, Col, Image, Row, Radio, Typography, InputNumber } from 'antd';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
@@ -27,8 +18,6 @@ const ProductMobile = () => {
   const [selectedSizeType, setSelectedSizeType] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalText, setModalText] = useState('');
   const navigate = useNavigate();
 
   const products = [
@@ -67,6 +56,16 @@ const ProductMobile = () => {
     { label: 'S', value: 's' },
   ];
 
+  const getPrice = () => {
+    if (selectedSizeType === 'adult') {
+      return 20;
+    }
+    if (selectedSizeType === 'child') {
+      return 15;
+    }
+    return 0;
+  };
+
   const addToCart = (product) => {
     const item = {
       ...product,
@@ -74,9 +73,23 @@ const ProductMobile = () => {
       selectedSizeType,
       selectedSize,
       quantity,
+      price: getPrice() * quantity, // Include price in cart item
     };
     setCart([...cart, item]);
-    showModal(product.name, selectedSizeType, selectedSize, quantity);
+<<<<<<< Updated upstream
+    navigate('/cart-summary'); // Navigate to the summary page after adding to cart
+=======
+    // Redirect to confirmation page with item info
+    navigate('/confirmation', {
+      state: {
+        productName: product.name,
+        selectedColor,
+        selectedSizeType,
+        selectedSize,
+        quantity,
+      },
+    });
+>>>>>>> Stashed changes
   };
 
   const handleQuantityChange = (value) => {
@@ -85,17 +98,11 @@ const ProductMobile = () => {
 
   const resetQuantity = () => setQuantity(1);
 
-  const showModal = (productName, sizeType, size, quantity) => {
-    setModalText(
-      `${productName} (${sizeType} - ${size}) with quantity ${quantity} added to cart!`
-    );
-    setModalVisible(true);
+<<<<<<< Updated upstream
+  const currentPrice = getPrice() * quantity;
 
-    setTimeout(() => {
-      setModalVisible(false);
-    }, 4000); // Modal will close after 4 seconds
-  };
-
+=======
+>>>>>>> Stashed changes
   return (
     <div className="product-container">
       <div className="design-selection">
@@ -205,6 +212,13 @@ const ProductMobile = () => {
         </Row>
       </div>
 
+      {/* Display price row */}
+      <div>
+        <Title level={2} style={{ textAlign: 'center' }}>
+          Current Price: ${currentPrice}
+        </Title>
+      </div>
+
       <Button
         type="primary"
         className="add-to-cart-button"
@@ -215,23 +229,6 @@ const ProductMobile = () => {
       >
         Add to Cart
       </Button>
-
-      <Modal
-        title="Added to Cart"
-        visible={modalVisible}
-        footer={[
-          <Button key="cart" type="primary" onClick={() => navigate('/cart')}>
-            Go to Cart
-          </Button>,
-          <Button key="close" onClick={() => setModalVisible(false)}>
-            Close
-          </Button>,
-        ]}
-        onCancel={() => setModalVisible(false)}
-        centered
-      >
-        <p>{modalText}</p>
-      </Modal>
     </div>
   );
 };

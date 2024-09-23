@@ -1,13 +1,14 @@
 CREATE TABLE user_profiles (
   user_id uuid PRIMARY KEY REFERENCES auth.users (id) NOT NULL,
-  username text UNIQUE NOT NULL,
-  profile_name text, -- Optional profile name
+  first_name text NOT NULL,
+  last_name text NOT NULL,
   phone text, -- Optional phone number
   email text UNIQUE, -- Unique email for the user
   shipping_address text, -- Optional shipping address
-  CONSTRAINT proper_username CHECK (username ~* '^[a-zA-Z0-9_]+$'),
-  CONSTRAINT username_length CHECK (char_length(username) > 3 AND char_length(username) < 15)
+  CONSTRAINT proper_first_name CHECK (char_length(first_name) > 1),
+  CONSTRAINT proper_last_name CHECK (char_length(last_name) > 1)
 );
+
 
 CREATE TABLE orders (
   order_id uuid PRIMARY KEY, -- Unique identifier for each order
