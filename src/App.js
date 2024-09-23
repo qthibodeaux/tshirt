@@ -10,6 +10,7 @@ import {
   Admin,
   AuthCallback,
   Cart,
+  CartSummaryPage,
   Home,
   Navbar,
   Product,
@@ -28,6 +29,7 @@ const routing = createHashRouter(
       <Route path="/" element={<Home />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/cart-summary" element={<CartSummaryPage />} />
       <Route path="/product" element={<Product />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/register" element={<Register />} />
@@ -49,7 +51,6 @@ function Layout() {
       <Content style={{ minHeight: '100vh' }}>
         <Navbar />
         <Outlet />
-        <TempState />
       </Content>
     </AuthProvider>
   );
