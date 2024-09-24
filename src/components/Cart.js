@@ -11,6 +11,7 @@ import {
 } from 'antd';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { cartState, cartTotalPriceState } from '../atoms/state';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Cart.css';
 
 const { Title, Text } = Typography;
@@ -20,6 +21,7 @@ const CartPage = () => {
   const [cartItems, setCartItems] = useRecoilState(cartState); // Use Recoil state for cart
   const totalPrice = useRecoilValue(cartTotalPriceState); // Total price from Recoil state
   const [customQty, setCustomQty] = useState({}); // Store custom quantity for 10+
+  const navigate = useNavigate();
 
   // Handle item removal
   const handleRemoveItem = (id) => {
@@ -59,7 +61,7 @@ const CartPage = () => {
 
   const handleCheckout = () => {
     console.log('Proceeding to checkout...');
-    // Add checkout logic here
+    navigate('/checkout');
   };
 
   return (
@@ -69,7 +71,6 @@ const CartPage = () => {
       <List
         itemLayout="horizontal"
         dataSource={cartItems}
-<<<<<<< Updated upstream
         renderItem={(item) => (
           <List.Item>
             <Row className="cart-item-row" gutter={16}>
@@ -144,35 +145,6 @@ const CartPage = () => {
             </Row>
           </List.Item>
         )}
-=======
-        renderItem={(item) => {
-          // Use default values in case item properties are undefined
-          const itemPrice = item.price || 0;
-          const itemQuantity = item.quantity || 0;
-
-          return (
-            <List.Item>
-              <Row className="cart-item-row" gutter={16}>
-                <Col span={4}>
-                  <img
-                    className="cart-item-image"
-                    src={item.image || '/images/default.jpg'}
-                    alt={item.name || 'Product'}
-                  />
-                </Col>
-                <Col span={14}>
-                  <Text strong>{item.name || 'Unnamed Product'}</Text>
-                  <div>Quantity: {itemQuantity}</div>
-                  <Text type="secondary">Price: ${itemPrice.toFixed(2)}</Text>
-                </Col>
-                <Col span={6} className="cart-item-price">
-                  <Text strong>${(itemPrice * itemQuantity).toFixed(2)}</Text>
-                </Col>
-              </Row>
-            </List.Item>
-          );
-        }}
->>>>>>> Stashed changes
       />
 
       <Divider />

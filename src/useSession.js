@@ -59,7 +59,6 @@ export function useSession() {
       console.log('No profile found, redirecting to welcome page.');
       navigate('/welcome');
     } else {
-      console.log('Profile found:', data[0]);
       setProfile(data[0]); // Set the profile in Recoil state
     }
 

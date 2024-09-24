@@ -15,24 +15,7 @@ export const profileState = atom({
 // Cart items state
 export const cartState = atom({
   key: 'cartState',
-  default: [
-    {
-      id: 1,
-      name: 'T-Shirt',
-      size: 'adult', // Specify the size (adult or kid)
-      price: 20, // Adult price
-      quantity: 2,
-      image: '/images/tshirt.jpg',
-    },
-    {
-      id: 2,
-      name: 'T-Shirt',
-      size: 'kid', // Specify the size (adult or kid)
-      price: 15, // Kid price
-      quantity: 1,
-      image: '/images/tshirt_kid.jpg',
-    },
-  ],
+  default: [],
 });
 
 // Selector to calculate the total number of items in the cart

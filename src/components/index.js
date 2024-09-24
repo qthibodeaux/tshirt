@@ -1,12 +1,10 @@
 import Admin from './Admin';
 import AuthCallback from './AuthCallback';
 import Cart from './Cart';
-<<<<<<< Updated upstream
 import CartSummaryPage from './CartSummary';
+import Checkout from './Checkout';
 import CustomDrawer from './CustomDrawer';
-=======
 import Confirmation from './ConfirmationPage';
->>>>>>> Stashed changes
 import Home from './Home';
 import Navbar from './Navbar';
 import Product from './Product';
@@ -20,12 +18,10 @@ export {
   Admin,
   AuthCallback,
   Cart,
-<<<<<<< Updated upstream
   CartSummaryPage,
+  Checkout,
   CustomDrawer,
-=======
   Confirmation,
->>>>>>> Stashed changes
   Home,
   Navbar,
   Product,
