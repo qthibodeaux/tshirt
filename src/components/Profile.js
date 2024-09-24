@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Typography, message, List } from 'antd';
 import { supaClient } from '../supabaseClient';
+import { useNavigate } from 'react-router-dom';
 
 const { Title } = Typography;
 
@@ -10,6 +11,7 @@ const Profile = () => {
   const [orders, setOrders] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // Use navigate for redirection
 
   useEffect(() => {
     fetchProfileData();
@@ -33,7 +35,11 @@ const Profile = () => {
         .eq('user_id', user_id)
         .single();
 
-      if (error) throw error;
+      if (error || !data) {
+        // Redirect to welcome page if profile not found
+        navigate('/welcome');
+        return;
+      }
 
       setProfileData(data);
       form.setFieldsValue(data);

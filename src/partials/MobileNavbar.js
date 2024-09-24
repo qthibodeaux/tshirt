@@ -1,24 +1,15 @@
 import React, { useState } from 'react';
-import { Drawer, Button, Badge, Avatar, Typography, Row, Col } from 'antd';
+import { Badge } from 'antd';
 import {
   MenuOutlined,
-  HomeOutlined,
   UserOutlined,
   ShoppingCartOutlined,
 } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-<<<<<<< Updated upstream
-import { cartItemCount, sessionState } from '../atoms/state';
-import { CustomDrawer } from '../components';
-import '../styles/Navbar.css';
-=======
 import { cartItemCount, sessionState } from '../atoms/state'; // Import Recoil state
+import { CustomDrawer } from '../components';
 import { useNavigate } from 'react-router-dom'; // For navigation
-import '../styles/Navbar.css'; // Your custom styles
-
-const { Text } = Typography;
->>>>>>> Stashed changes
+import '../styles/Navbar.css';
 
 const MobileNavbar = () => {
   const session = useRecoilValue(sessionState); // Get session state from Recoil
@@ -41,12 +32,15 @@ const MobileNavbar = () => {
     navigate('/profile');
   };
 
+  const goToCart = () => {
+    closeDrawer();
+    navigate('/cart');
+  };
+
   const goToJoin = () => {
     closeDrawer();
     navigate('/join');
   };
-
-  const goToHome = () => navigate('');
 
   return (
     <div className="navbar-mobile">
@@ -55,71 +49,30 @@ const MobileNavbar = () => {
         <MenuOutlined className="menu-icon" onClick={showDrawer} />
 
         {/* Centered Title */}
-<<<<<<< Updated upstream
-        <div className="mobilenav-center" onClick={goToHome}>
-          <span className="mobilenav-title">T Shirt</span>
-=======
-        <div className="mobilenav-center">
+        <div
+          className="mobilenav-center"
+          onClick={() => {
+            navigate('/');
+          }}
+        >
           <span className="mobilenav-title">T-Shirt</span>
->>>>>>> Stashed changes
         </div>
 
         {/* Right Side Icons */}
         <div className="mobilenav-right">
-          <UserOutlined className="mobilenav-icon" />
+          {session ? (
+            <UserOutlined className="mobilenav-icon" onClick={goToProfile} />
+          ) : null}
           <Badge count={itemCount} overflowCount={99} offset={[10, 0]}>
-            <ShoppingCartOutlined className="mobilenav-icon" />
+            <ShoppingCartOutlined
+              className="mobilenav-icon"
+              onClick={goToCart}
+            />
           </Badge>
         </div>
       </div>
 
-<<<<<<< Updated upstream
       <CustomDrawer visible={drawerVisible} onClose={closeDrawer} />
-=======
-      {/* Drawer for Mobile Menu */}
-      <Drawer
-        title="Menu"
-        placement="left"
-        onClose={closeDrawer}
-        visible={drawerVisible}
-        className="drawer-mobile"
-      >
-        {/* Home Button */}
-        <Row justify="center" className="drawer-button-row">
-          <Button
-            type="primary"
-            icon={<HomeOutlined />}
-            size="large"
-            onClick={goToHome}
-            className="drawer-button"
-          >
-            Home
-          </Button>
-        </Row>
-
-        {/* Contextual Section: Profile info or Join */}
-        <Row className="drawer-button-row">
-          {session ? (
-            <div className="profile-info" style={{ textAlign: 'center' }}>
-              <Avatar size={64} icon={<UserOutlined />} />
-              <Text strong>{session.user.email}</Text>
-              <Button
-                type="primary"
-                onClick={goToProfile}
-                className="profile-button"
-                style={{ marginTop: '10px' }}
-              >
-                View Profile
-              </Button>
-            </div>
-          ) : (
-            <Button type="primary" block onClick={goToJoin}>
-              Join
-            </Button>
-          )}
-        </Row>
-      </Drawer>
->>>>>>> Stashed changes
     </div>
   );
 };

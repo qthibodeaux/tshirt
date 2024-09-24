@@ -76,9 +76,7 @@ const ProductMobile = () => {
       price: getPrice() * quantity, // Include price in cart item
     };
     setCart([...cart, item]);
-<<<<<<< Updated upstream
     navigate('/cart-summary'); // Navigate to the summary page after adding to cart
-=======
     // Redirect to confirmation page with item info
     navigate('/confirmation', {
       state: {
@@ -89,7 +87,6 @@ const ProductMobile = () => {
         quantity,
       },
     });
->>>>>>> Stashed changes
   };
 
   const handleQuantityChange = (value) => {
@@ -98,11 +95,8 @@ const ProductMobile = () => {
 
   const resetQuantity = () => setQuantity(1);
 
-<<<<<<< Updated upstream
   const currentPrice = getPrice() * quantity;
 
-=======
->>>>>>> Stashed changes
   return (
     <div className="product-container">
       <div className="design-selection">

@@ -10,17 +10,14 @@ import {
   Admin,
   AuthCallback,
   Cart,
-<<<<<<< Updated upstream
   CartSummaryPage,
-=======
+  Checkout,
   Confirmation,
->>>>>>> Stashed changes
   Home,
   Navbar,
   Product,
   Profile,
   Register,
-  TempState,
   Welcome,
 } from './components/index';
 import { AuthProvider } from './useSession';
@@ -33,11 +30,9 @@ const routing = createHashRouter(
       <Route path="/" element={<Home />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/cart" element={<Cart />} />
-<<<<<<< Updated upstream
       <Route path="/cart-summary" element={<CartSummaryPage />} />
-=======
+      <Route path="/checkout" element={<Checkout />} />
       <Route path="/confirmation" element={<Confirmation />} />
->>>>>>> Stashed changes
       <Route path="/product" element={<Product />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/register" element={<Register />} />

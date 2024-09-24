@@ -24,23 +24,24 @@ const CustomDrawer = ({ visible, onClose }) => {
     onClose(); // Close the drawer after navigation
   };
 
+  // Sign-out function
+  const handleSignOut = async () => {
+    await supaClient.auth.signOut();
+    navigate('/'); // Redirect to home or another page after signout
+    onClose(); // Close the drawer after signout
+  };
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (session) {
-        const { id } = session.user; // Assuming user_id is in the session
-        const { data, error } = await supaClient
+        const { id } = session.user;
+        const { data } = await supaClient
           .from('user_profiles')
-          .select('*') // Selecting the first_name field
+          .select('*')
           .eq('user_id', id)
           .single();
 
-        if (error) {
-          console.error('Error fetching user profile:', error.message);
-        } else {
-          // Use 'first_name' from the returned data
-          console.log('Name?', data);
-          setFirstName(data?.first_name || '');
-        }
+        setFirstName(data?.first_name || '');
       }
       setLoading(false);
     };
@@ -105,18 +106,23 @@ const CustomDrawer = ({ visible, onClose }) => {
         {!session ? (
           // If no session, show "Join" button centered
           <Col span={24} className="center-content">
-            <Button type="default" onClick={() => handleNavigate('/register')}>
+            <Button
+              type="default"
+              onClick={() => handleNavigate('/register')}
+              className="drawer-button"
+            >
               Join
             </Button>
           </Col>
         ) : (
           // If session exists, show profile, products, and cart buttons
-          <Col>
+          <Col className="drawer-button">
             <Row className="drawer-row">
               <Button
                 type="default"
                 block
                 onClick={() => handleNavigate('/profile')}
+                className="drawer-button"
               >
                 Profile
               </Button>
@@ -125,7 +131,8 @@ const CustomDrawer = ({ visible, onClose }) => {
               <Button
                 type="default"
                 block
-                onClick={() => handleNavigate('/products')}
+                onClick={() => handleNavigate('/product')}
+                className="drawer-button"
               >
                 Products
               </Button>
@@ -135,8 +142,21 @@ const CustomDrawer = ({ visible, onClose }) => {
                 type="default"
                 block
                 onClick={() => handleNavigate('/cart')}
+                className="drawer-button"
               >
                 Cart
+              </Button>
+            </Row>
+            {/* Sign-out button below Cart */}
+            <Row className="drawer-row">
+              <Button
+                type="default"
+                block
+                danger
+                onClick={handleSignOut}
+                className="drawer-button"
+              >
+                Sign Out
               </Button>
             </Row>
           </Col>
