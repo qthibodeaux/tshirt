@@ -1,203 +1,268 @@
 import React, { useEffect, useState } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
+import { cartState, cartTotalPriceState, sessionState } from '../atoms/state';
 import {
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  Row,
-  Col,
-  Card,
+  List,
   Typography,
   Divider,
-  message,
+  Button,
+  Input,
+  Spin,
+  Row,
+  Col,
+  notification,
 } from 'antd';
-import { useRecoilValue } from 'recoil';
 import { supaClient } from '../supabaseClient';
-import { cartState, profileState } from '../atoms/state'; // Adjust path as necessary
+import '../styles/CheckoutPage.css';
 
-const { Title } = Typography;
+const { Text } = Typography;
 
-const Checkout = () => {
-  const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+const CheckoutPage = () => {
   const cartItems = useRecoilValue(cartState);
-  const [shippingAddress, setShippingAddress] = useState('');
+  const setCartItems = useSetRecoilState(cartState); // To update the cart
+  const totalPrice = useRecoilValue(cartTotalPriceState);
+  const session = useRecoilValue(sessionState);
+  const [guestInfo, setGuestInfo] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    address1: '',
+    address2: '',
+    city: '',
+    state: '',
+    zip: '',
+  });
+  const [profile, setProfile] = useState(null); // State for profile info
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  // Fetch user profile data
-  const fetchProfile = async (userId) => {
-    const { data, error } = await supaClient
-      .from('user_profiles')
-      .select('shipping_address')
-      .eq('user_id', userId)
-      .single(); // Assuming each user has one profile
-
-    if (error) {
-      console.error('Error fetching profile: ', error.message);
-      return null;
-    }
-    return data;
-  };
-
+  // Fetch user profile from Supabase if session is active
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      const { data: session } = await supaClient.auth.getSession();
-      if (session?.user) {
-        const userId = session.user.id;
-        const profile = await fetchProfile(userId);
-        if (profile) {
-          setShippingAddress(profile.shipping_address || '');
+    const fetchProfile = async () => {
+      if (session) {
+        try {
+          const { data, error } = await supaClient
+            .from('user_profiles')
+            .select('first_name, last_name, phone, email, shipping_address')
+            .eq('user_id', session.user.id)
+            .single();
+
+          if (error) {
+            console.error('Error fetching profile:', error);
+          } else {
+            setProfile(data);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        } finally {
+          setLoading(false);
         }
+      } else {
+        setLoading(false);
       }
     };
-    fetchUserProfile();
-  }, []);
 
-  const calculateTotal = () => {
-    return cartItems.reduce(
-      (total, item) => total + item.quantity * item.price,
-      0
-    );
+    fetchProfile();
+  }, [session]);
+
+  const handleRemoveItem = (itemId) => {
+    const updatedCart = cartItems.filter((item) => item.id !== itemId);
+    setCartItems(updatedCart);
   };
 
-  const onFinish = async (values) => {
-    setLoading(true);
+  const handleGuestCheckout = async () => {
+    // Handle guest checkout process with Supabase insert logic
+    await handleSubmitOrder(null); // For guest checkout, we pass null for user_id
+  };
+
+  const handleProfileEdit = () => {
+    navigate('/profile');
+  };
+
+  const handleRegisterClick = () => {
+    navigate('/register');
+  };
+
+  const handleSubmitOrder = async (userProfile) => {
+    const shippingAddress = userProfile
+      ? userProfile.shipping_address
+      : `${guestInfo.address1}, ${guestInfo.address2}, ${guestInfo.city}, ${guestInfo.state}, ${guestInfo.zip}`;
+
     try {
-      // Process the checkout (e.g., send to Supabase or another service)
-      const totalAmount = calculateTotal();
-      // Example: insert order into database
-      const { data: session } = await supaClient.auth.getSession();
-      const user_id = session.session.user.id;
+      // 1. Insert the order
+      const { data: order, error: orderError } = await supaClient
+        .from('orders')
+        .insert([
+          {
+            user_id: session ? session.user.id : null, // null for guest checkout
+            total_amount: totalPrice,
+            shipping_address: shippingAddress,
+          },
+        ])
+        .select()
+        .single();
 
-      const { error } = await supaClient.from('orders').insert({
-        user_id,
-        total_amount: totalAmount,
-        shipping_address: values.shipping_address || shippingAddress, // Use form input or profile address
-        status: 'pending',
+      if (orderError) {
+        throw new Error(orderError.message);
+      }
+
+      // 2. Insert the items directly with product details
+      const orderItems = cartItems.map((item) => ({
+        order_id: order.order_id, // UUID from the inserted order
+        product_name: item.product_name, // Product name
+        selected_color: item.selectedColor, // Selected color
+        size_type: item.selectedSizeType, // 'adult' or 'child'
+        selected_size: item.selectedSize, // Selected size
+        quantity: item.quantity,
+        price: item.price,
+      }));
+
+      const { error: itemsError } = await supaClient
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) {
+        throw new Error(itemsError.message);
+      }
+
+      // 3. Clear the cart after the order is successfully placed
+      setCartItems([]);
+
+      // 4. Show success notification and navigate to confirmation page
+      notification.success({
+        message: 'Order Successful',
+        description: 'Your order has been placed successfully!',
       });
-
-      if (error) throw error;
-
-      message.success('Order placed successfully!');
-      form.resetFields(); // Reset the form after successful checkout
+      navigate('/order-confirmation');
     } catch (error) {
-      console.error('Checkout error: ', error.message);
-      message.error('Failed to complete the order.');
-    } finally {
-      setLoading(false);
+      notification.error({
+        message: 'Order Failed',
+        description: `Failed to place the order: ${error.message}`,
+      });
     }
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <Title level={2}>Checkout</Title>
-
-      <Row gutter={24}>
-        <Col xs={24} md={16}>
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={onFinish}
-            initialValues={{ shipping_address: shippingAddress }}
-          >
-            <Card title="Shipping Details">
-              <Form.Item
-                name="shipping_address"
-                label="Shipping Address"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter your shipping address',
-                  },
-                ]}
-              >
-                <Input placeholder="Enter shipping address" />
-              </Form.Item>
-            </Card>
-
-            <Card title="Payment Details" style={{ marginTop: '20px' }}>
-              <Form.Item
-                name="card_number"
-                label="Card Number"
-                rules={[
-                  { required: true, message: 'Please enter your card number' },
-                ]}
-              >
-                <Input placeholder="Enter card number" />
-              </Form.Item>
-
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Form.Item
-                    name="expiry_date"
-                    label="Expiry Date"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please enter card expiry date',
-                      },
-                    ]}
-                  >
-                    <Input placeholder="MM/YY" />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item
-                    name="cvc"
-                    label="CVC"
-                    rules={[
-                      { required: true, message: 'Please enter card CVC' },
-                    ]}
-                  >
-                    <Input placeholder="CVC" />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Form.Item name="save_card" valuePropName="checked">
-                <Checkbox>Save this card for future payments</Checkbox>
-              </Form.Item>
-            </Card>
-
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={loading}
-              block
-              style={{ marginTop: '20px' }}
-            >
-              Place Order
-            </Button>
-          </Form>
-        </Col>
-
-        <Col xs={24} md={8}>
-          <Card title="Order Summary">
-            {cartItems.map((item) => (
-              <Row key={item.id}>
-                <Col span={16}>
-                  {item.name} (x{item.quantity})
-                </Col>
-                <Col span={8} style={{ textAlign: 'right' }}>
-                  ${item.price * item.quantity}
-                </Col>
-              </Row>
-            ))}
-
-            <Divider />
-
-            <Row>
-              <Col span={16}>
-                <strong>Total:</strong>
+    <div className="checkout-container">
+      <List
+        className="cart-items-list"
+        itemLayout="horizontal"
+        dataSource={cartItems}
+        renderItem={(item) => (
+          <List.Item>
+            <Row className="cart-item-row" gutter={16}>
+              <Col span={4}>
+                <img
+                  className="cart-item-image"
+                  src={item.image}
+                  alt={item.name}
+                />
               </Col>
-              <Col span={8} style={{ textAlign: 'right' }}>
-                <strong>${calculateTotal()}</strong>
+              <Col span={12}>
+                <Text strong>{item.name}</Text>
+                <div>
+                  <Text>Qty: {item.quantity}</Text>
+                </div>
+                <Text type="secondary">Price: ${item.price.toFixed(2)}</Text>
+              </Col>
+              <Col span={8} className="cart-item-price">
+                <Text strong>${(item.price * item.quantity).toFixed(2)}</Text>
+                <Button
+                  type="link"
+                  danger
+                  onClick={() => handleRemoveItem(item.id)}
+                >
+                  Remove
+                </Button>
               </Col>
             </Row>
-          </Card>
-        </Col>
-      </Row>
+          </List.Item>
+        )}
+      />
+
+      <Divider />
+
+      {!session ? (
+        <div className="guest-section">
+          <Text strong>Total: ${totalPrice.toFixed(2)}</Text>
+          <div className="button-row">
+            <Button type="primary" onClick={handleGuestCheckout}>
+              Checkout as Guest
+            </Button>
+            <Button onClick={handleRegisterClick}>Register</Button>
+          </div>
+          <Divider />
+          {/* Guest form for entering details */}
+          <div className="form-row">
+            <Input
+              className="form-item"
+              placeholder="First Name"
+              value={guestInfo.firstName}
+              onChange={(e) =>
+                setGuestInfo({ ...guestInfo, firstName: e.target.value })
+              }
+            />
+          </div>
+          <div className="form-row">
+            <Input
+              className="form-item"
+              placeholder="Last Name"
+              value={guestInfo.lastName}
+              onChange={(e) =>
+                setGuestInfo({ ...guestInfo, lastName: e.target.value })
+              }
+            />
+          </div>
+          {/* Other guest inputs for phone, email, address */}
+          <Button type="primary" onClick={handleGuestCheckout}>
+            Submit Order
+          </Button>
+        </div>
+      ) : loading ? (
+        <Spin />
+      ) : (
+        <div className="profile-section">
+          {profile && (
+            <>
+              <div className="profile-info">
+                <Text strong>Name: </Text>
+                <Text>
+                  {profile.first_name} {profile.last_name}
+                </Text>
+              </div>
+              <div className="profile-info">
+                <Text strong>Email: </Text>
+                <Text>{profile.email}</Text>
+              </div>
+              <div className="profile-info">
+                <Text strong>Phone: </Text>
+                <Text>{profile.phone}</Text>
+              </div>
+              <div className="profile-info">
+                <Text strong>Address: </Text>
+                <Text>{profile.shipping_address}</Text>
+              </div>
+              <Divider />
+              <Text strong>Total: ${totalPrice.toFixed(2)}</Text>
+              <div className="button-row">
+                <Button type="primary" onClick={handleProfileEdit}>
+                  Edit Profile
+                </Button>
+                <Button
+                  type="primary"
+                  onClick={() => handleSubmitOrder(profile)}
+                >
+                  Submit Order
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };
 
-export default Checkout;
+export default CheckoutPage;

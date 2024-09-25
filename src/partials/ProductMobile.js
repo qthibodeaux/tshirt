@@ -49,11 +49,11 @@ const ProductMobile = () => {
   ];
 
   const sizeOptions = [
-    { label: 'XXL', value: 'xxl' },
-    { label: 'XL', value: 'xl' },
-    { label: 'L', value: 'l' },
-    { label: 'M', value: 'm' },
-    { label: 'S', value: 's' },
+    { label: 'XXL', value: 'XXL' },
+    { label: 'XL', value: 'XL' },
+    { label: 'L', value: 'L' },
+    { label: 'M', value: 'M' },
+    { label: 'S', value: 'S' },
   ];
 
   const getPrice = () => {
@@ -68,7 +68,7 @@ const ProductMobile = () => {
 
   const addToCart = (product) => {
     const item = {
-      ...product,
+      product_name: product.name, // Capture product name directly
       selectedColor,
       selectedSizeType,
       selectedSize,
@@ -77,16 +77,6 @@ const ProductMobile = () => {
     };
     setCart([...cart, item]);
     navigate('/cart-summary'); // Navigate to the summary page after adding to cart
-    // Redirect to confirmation page with item info
-    navigate('/confirmation', {
-      state: {
-        productName: product.name,
-        selectedColor,
-        selectedSizeType,
-        selectedSize,
-        quantity,
-      },
-    });
   };
 
   const handleQuantityChange = (value) => {

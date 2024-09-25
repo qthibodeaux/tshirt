@@ -1,4 +1,5 @@
 import {
+  Navigate,
   RouterProvider,
   Outlet,
   createHashRouter,
@@ -18,6 +19,7 @@ import {
   Product,
   Profile,
   Register,
+  TempState,
   Welcome,
 } from './components/index';
 import { AuthProvider } from './useSession';
@@ -54,6 +56,7 @@ function Layout() {
       <Content style={{ minHeight: '100vh' }}>
         <Navbar />
         <Outlet />
+        <TempState />
       </Content>
     </AuthProvider>
   );
