@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Col, Image, Row, Radio, Typography, InputNumber } from 'antd';
-import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Col, Avatar, Row, Radio, Typography, InputNumber } from 'antd';
+import {
+  SkinOutlined,
+  BgColorsOutlined,
+  MinusOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { cartState } from '../atoms/state';
@@ -90,13 +95,13 @@ const ProductMobile = () => {
   return (
     <div className="product-container">
       <div className="design-selection">
-        <Title level={2} style={{ textAlign: 'center' }}>
+        <Title level={3} className="section-title">
+          <SkinOutlined style={{ marginRight: 8 }} />
           Choose a Design:
         </Title>
-        <Row justify="center">
+        <Row gutter={[16, 16]} justify="center">
           <Col span={12} className="center-content">
-            <Title level={4}>Kansas</Title>
-            <Image src={kansas} className="product-image" />
+            <Avatar shape="square" size={64} src={kansas} alt="Kansas Design" />
             <Radio
               checked={selectedDesign === 0}
               onClick={() => setSelectedDesign(0)}
@@ -105,8 +110,12 @@ const ProductMobile = () => {
             </Radio>
           </Col>
           <Col span={12} className="center-content">
-            <Title level={4}>Kansas State</Title>
-            <Image src={kstate} className="product-image" />
+            <Avatar
+              shape="square"
+              size={64}
+              src={kstate}
+              alt="Kansas State Design"
+            />
             <Radio
               checked={selectedDesign === 1}
               onClick={() => setSelectedDesign(1)}
@@ -118,7 +127,8 @@ const ProductMobile = () => {
       </div>
 
       <div>
-        <Title level={2} style={{ textAlign: 'center', color: 'blue' }}>
+        <Title level={3} className="section-title">
+          <BgColorsOutlined style={{ marginRight: 8 }} />
           Choose a Color:
         </Title>
         <Row justify="center">
@@ -134,7 +144,7 @@ const ProductMobile = () => {
       </div>
 
       <div>
-        <Title level={2} style={{ textAlign: 'center' }}>
+        <Title level={3} className="section-title">
           Adult or Child sizes:
         </Title>
         <Row justify="center">
@@ -150,7 +160,7 @@ const ProductMobile = () => {
       </div>
 
       <div>
-        <Title level={2} style={{ textAlign: 'center' }}>
+        <Title level={3} className="section-title">
           Choose a size
         </Title>
         <Row justify="center">
@@ -166,7 +176,7 @@ const ProductMobile = () => {
       </div>
 
       <div>
-        <Title level={2} style={{ textAlign: 'center' }}>
+        <Title level={3} className="section-title">
           Quantity
         </Title>
         <Row justify="center" align="middle">
@@ -198,7 +208,7 @@ const ProductMobile = () => {
 
       {/* Display price row */}
       <div>
-        <Title level={2} style={{ textAlign: 'center' }}>
+        <Title level={3} style={{ textAlign: 'center', marginTop: 20 }}>
           Current Price: ${currentPrice}
         </Title>
       </div>

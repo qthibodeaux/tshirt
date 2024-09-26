@@ -75,3 +75,6 @@ ALTER TABLE orders
 ADD COLUMN is_guest boolean DEFAULT false, -- New column to indicate if this is a guest order
 ADD COLUMN guest_email text, -- Optional email for guest users
 ALTER COLUMN user_id DROP NOT NULL; -- Allow user_id to be null for guest orders
+
+ALTER TABLE orders
+ADD COLUMN order_number VARCHAR(6) UNIQUE NOT NULL;

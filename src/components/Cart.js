@@ -8,6 +8,7 @@ import {
   Divider,
   Select,
   Input,
+  Avatar, // Import Avatar from Ant Design
 } from 'antd';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { cartState, cartTotalPriceState } from '../atoms/state';
@@ -74,14 +75,17 @@ const CartPage = () => {
         renderItem={(item) => (
           <List.Item>
             <Row className="cart-item-row" gutter={16}>
-              <Col span={4}>
-                <img
-                  className="cart-item-image"
+              <Col span={8}>
+                {/* Replace img with Avatar */}
+                <Avatar
                   src={item.image}
                   alt={item.name}
+                  size={80}
+                  shape="square"
+                  className="cart-item-image"
                 />
               </Col>
-              <Col span={12}>
+              <Col span={8}>
                 <Text strong>{item.name}</Text>
                 <div>
                   <Text>Qty: </Text>

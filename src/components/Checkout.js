@@ -85,13 +85,22 @@ const CheckoutPage = () => {
     navigate('/register');
   };
 
+  const generateOrderNumber = () => {
+    const numbers = Math.floor(10000 + Math.random() * 90000).toString(); // Generate 5 random numbers
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const letter = letters[Math.floor(Math.random() * letters.length)]; // Pick a random letter
+    return numbers + letter; // Combine them
+  };
+
   const handleSubmitOrder = async (userProfile) => {
     const shippingAddress = userProfile
       ? userProfile.shipping_address
       : `${guestInfo.address1}, ${guestInfo.address2}, ${guestInfo.city}, ${guestInfo.state}, ${guestInfo.zip}`;
 
+    const orderNumber = generateOrderNumber();
+
     try {
-      // 1. Insert the order
+      // 1. Insert the order with the generated order number
       const { data: order, error: orderError } = await supaClient
         .from('orders')
         .insert([
@@ -99,6 +108,7 @@ const CheckoutPage = () => {
             user_id: session ? session.user.id : null, // null for guest checkout
             total_amount: totalPrice,
             shipping_address: shippingAddress,
+            order_number: orderNumber, // Add order number here
           },
         ])
         .select()
@@ -135,7 +145,15 @@ const CheckoutPage = () => {
         message: 'Order Successful',
         description: 'Your order has been placed successfully!',
       });
-      navigate('/order-confirmation');
+
+      // Navigate to order confirmation page and pass order number via state
+      navigate('/order-confirmation', {
+        state: {
+          orderNumber: orderNumber, // Ensure this matches the key in OrderConfirmation
+          orderItems: cartItems, // This must be orderItems to match the component
+          totalAmount: totalPrice, // Ensure totalAmount is passed correctly
+        },
+      });
     } catch (error) {
       notification.error({
         message: 'Order Failed',

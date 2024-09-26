@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Typography, Button } from 'antd';
+import { Row, Col, Typography, Button, Avatar } from 'antd';
 import { useRecoilValue } from 'recoil';
 import { cartState } from '../atoms/state';
 import { useNavigate } from 'react-router-dom';
@@ -29,26 +29,55 @@ const CartSummary = () => {
       {/* Row 1: Display the details of the last added item */}
       {lastAddedItem && (
         <div className="cart-item">
-          <Row justify="center" className="item-details">
+          <Row justify="start" align="middle">
             <Col>
-              <Row>
-                <Text strong>New Item Added:</Text>
+              {/* Avatar for the item */}
+              <Avatar
+                src={lastAddedItem.image} // Assuming the image URL is in `lastAddedItem.image`
+                className="item-avatar"
+                shape="square"
+              />
+            </Col>
+            <Col flex="auto">
+              <Row className="item-details">
+                <Col span={12} className="item-label">
+                  <Text>Design:</Text>
+                </Col>
+                <Col span={12} className="item-value">
+                  <Text>{lastAddedItem.name}</Text>
+                </Col>
               </Row>
-              <Row>
-                <Text>Design:</Text> <Text>{lastAddedItem.name}</Text>
+              <Row className="item-details">
+                <Col span={12} className="item-label">
+                  <Text>Color:</Text>
+                </Col>
+                <Col span={12} className="item-value">
+                  <Text>{lastAddedItem.selectedColor}</Text>
+                </Col>
               </Row>
-              <Row>
-                <Text>Color:</Text> <Text>{lastAddedItem.selectedColor}</Text>
+              <Row className="item-details">
+                <Col span={12} className="item-label">
+                  <Text>Size Type:</Text>
+                </Col>
+                <Col span={12} className="item-value">
+                  <Text>{lastAddedItem.selectedSizeType}</Text>
+                </Col>
               </Row>
-              <Row>
-                <Text>Size Type:</Text>{' '}
-                <Text>{lastAddedItem.selectedSizeType}</Text>
+              <Row className="item-details">
+                <Col span={12} className="item-label">
+                  <Text>Size:</Text>
+                </Col>
+                <Col span={12} className="item-value">
+                  <Text>{lastAddedItem.selectedSize}</Text>
+                </Col>
               </Row>
-              <Row>
-                <Text>Size:</Text> <Text>{lastAddedItem.selectedSize}</Text>
-              </Row>
-              <Row>
-                <Text>Quantity:</Text> <Text>{lastAddedItem.quantity}</Text>
+              <Row className="item-details">
+                <Col span={12} className="item-label">
+                  <Text>Quantity:</Text>
+                </Col>
+                <Col span={12} className="item-value">
+                  <Text>{lastAddedItem.quantity}</Text>
+                </Col>
               </Row>
             </Col>
           </Row>
@@ -80,7 +109,7 @@ const CartSummary = () => {
         </Button>
         <Button
           style={{ marginLeft: '10px' }}
-          onClick={() => navigate('/products')}
+          onClick={() => navigate('/product')}
           className="product-button"
         >
           Back to Products

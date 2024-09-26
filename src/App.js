@@ -16,10 +16,10 @@ import {
   Confirmation,
   Home,
   Navbar,
+  OrderConfirmation,
   Product,
   Profile,
   Register,
-  TempState,
   Welcome,
 } from './components/index';
 import { AuthProvider } from './useSession';
@@ -35,6 +35,7 @@ const routing = createHashRouter(
       <Route path="/cart-summary" element={<CartSummaryPage />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/confirmation" element={<Confirmation />} />
+      <Route path="/order-confirmation" element={<OrderConfirmation />} />
       <Route path="/product" element={<Product />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/register" element={<Register />} />
@@ -56,7 +57,6 @@ function Layout() {
       <Content style={{ minHeight: '100vh' }}>
         <Navbar />
         <Outlet />
-        <TempState />
       </Content>
     </AuthProvider>
   );

@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Typography, message, List } from 'antd';
+import {
+  Col,
+  Collapse,
+  Divider,
+  Form,
+  Input,
+  Button,
+  Row,
+  Typography,
+  message,
+  List,
+} from 'antd';
 import { supaClient } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
-const { Title } = Typography;
+const { Text, Title } = Typography;
+const { Panel } = Collapse;
 
 const Profile = () => {
   const [form] = Form.useForm();
@@ -58,14 +70,13 @@ const Profile = () => {
 
       const { data, error } = await supaClient
         .from('orders')
-        .select('*')
+        .select('*, order_items(*)')
         .eq('user_id', user_id);
 
       if (error) throw error;
 
       setOrders(data);
     } catch (error) {
-      console.error('Error fetching orders: ', error.message);
       message.error('Failed to load orders.');
     }
   };
@@ -150,21 +161,67 @@ const Profile = () => {
         </Form>
       )}
 
-      <div style={{ marginTop: '40px' }}>
-        <Title level={3}>Orders</Title>
-        <List
-          itemLayout="horizontal"
-          dataSource={orders}
-          renderItem={(order) => (
-            <List.Item>
-              <List.Item.Meta
-                title={`Order #${order.order_id}`}
-                description={`Status: ${order.status} | Total: $${order.total_amount}`}
+      <Divider />
+
+      {/* Orders Section */}
+      <Title level={3}>Orders</Title>
+      {!loading && (
+        <Collapse accordion>
+          {orders.map((order) => (
+            <Panel
+              header={`Order #${order.order_number} | ${new Date(
+                order.order_date
+              ).toLocaleDateString()} | Status: ${order.status}`}
+              key={order.order_id}
+            >
+              <Title level={4}>Order Breakdown</Title>
+              <List
+                itemLayout="horizontal"
+                dataSource={order.order_items}
+                renderItem={(item) => (
+                  <List.Item>
+                    <Row className="order-item-row" gutter={16}>
+                      <Col span={4}>
+                        <img
+                          className="order-item-image"
+                          src={item.image}
+                          alt={item.product_name}
+                        />
+                      </Col>
+                      <Col span={16}>
+                        <Text strong>{item.product_name}</Text>
+                        <div>
+                          <Text>Color: {item.selected_color}</Text>
+                        </div>
+                        <div>
+                          <Text>Size: {item.selected_size}</Text>
+                        </div>
+                        <Text>Qty: {item.quantity}</Text>
+                      </Col>
+                      <Col span={4} className="order-item-price">
+                        <Text strong>
+                          ${(item.price * item.quantity).toFixed(2)}
+                        </Text>
+                      </Col>
+                    </Row>
+                  </List.Item>
+                )}
               />
-            </List.Item>
-          )}
-        />
-      </div>
+              <Divider />
+              <div className="order-total-section">
+                <Text strong>Total Amount: </Text>
+                <Text className="total-amount">
+                  ${order.total_amount.toFixed(2)}
+                </Text>
+              </div>
+              <div className="shipping-address-section">
+                <Text strong>Ship to: </Text>
+                <Text>{order.shipping_address}</Text>
+              </div>
+            </Panel>
+          ))}
+        </Collapse>
+      )}
     </div>
   );
 };

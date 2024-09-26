@@ -21,12 +21,6 @@ const MobileNavbar = () => {
   const showDrawer = () => setDrawerVisible(true);
   const closeDrawer = () => setDrawerVisible(false);
 
-  // Navigation handlers
-  const goToHome = () => {
-    closeDrawer();
-    navigate('/home');
-  };
-
   const goToProfile = () => {
     closeDrawer();
     navigate('/profile');
@@ -35,11 +29,6 @@ const MobileNavbar = () => {
   const goToCart = () => {
     closeDrawer();
     navigate('/cart');
-  };
-
-  const goToJoin = () => {
-    closeDrawer();
-    navigate('/join');
   };
 
   return (

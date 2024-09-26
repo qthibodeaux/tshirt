@@ -7,11 +7,11 @@ import CustomDrawer from './CustomDrawer';
 import Confirmation from './ConfirmationPage';
 import Home from './Home';
 import Navbar from './Navbar';
+import OrderConfirmation from './OrderConfirmation';
 import Product from './Product';
 import Profile from './Profile';
 import ProtectedRoute from './ProtectedRoute';
 import Register from './Register';
-import TempState from './TempState';
 import Welcome from './Welcome';
 
 export {
@@ -24,10 +24,10 @@ export {
   Confirmation,
   Home,
   Navbar,
+  OrderConfirmation,
   Product,
   Profile,
   ProtectedRoute,
   Register,
-  TempState,
   Welcome,
 };
