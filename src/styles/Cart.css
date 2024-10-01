@@ -68,8 +68,8 @@
 
 /* Button for custom quantity updates */
 .qty-custom-btn {
-  background-color: #1890ff;
-  color: white;
+  background-color: #000000; /* Set background to black */
+  color: #ffffff; /* Set font to white */
   border: none;
   padding: 0 12px;
   border-radius: 4px;
@@ -78,13 +78,14 @@
 }
 
 .qty-custom-btn:hover {
-  background-color: #40a9ff;
+  background-color: #333333; /* Darker black on hover */
 }
 
 /* Checkout button styling */
 .cart-checkout .ant-btn-primary {
-  background-color: #52c41a;
-  border-color: #52c41a;
+  background-color: #000000; /* Set background to black */
+  border-color: #000000; /* Set border color to black */
+  color: #ffffff; /* Set font to white */
   padding: 10px 30px;
   font-size: 18px;
   font-weight: bold;
@@ -93,19 +94,7 @@
 }
 
 .cart-checkout .ant-btn-primary:hover {
-  background-color: #389e0d;
-  border-color: #389e0d;
+  background-color: #333333; /* Darker black on hover */
+  border-color: #333333;
   transform: translateY(-2px);
-}
-
-/* Checkout button hover effect */
-.cart-checkout {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 24px;
-}
-
-.cart-checkout .ant-btn-primary:focus {
-  outline: none;
-  box-shadow: none;
 }

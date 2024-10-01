@@ -98,7 +98,6 @@ const CartSummary = () => {
         </Col>
       </Row>
 
-      {/* Buttons to go to Cart or return to Products */}
       <Row justify="center" style={{ marginTop: '20px' }}>
         <Button
           type="primary"

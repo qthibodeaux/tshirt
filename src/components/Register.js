@@ -52,7 +52,16 @@ const Register = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" block>
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            style={{
+              backgroundColor: 'black',
+              borderColor: 'black',
+              fontWeight: 'bold',
+            }}
+          >
             Send Magic Link
           </Button>
         </Form.Item>

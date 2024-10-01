@@ -31,14 +31,14 @@ const OrderConfirmation = () => {
           renderItem={(item) => (
             <List.Item>
               <Row className="order-item-row" gutter={16}>
-                <Col span={4}>
+                <Col span={6}>
                   <img
                     className="order-item-image"
                     src={item.image}
                     alt={item.product_name}
                   />
                 </Col>
-                <Col span={16}>
+                <Col span={10}>
                   <Text strong>{item.product_name}</Text>
                   <div>
                     <Text>Color: {item.selected_color}</Text>
@@ -48,7 +48,7 @@ const OrderConfirmation = () => {
                   </div>
                   <Text>Qty: {item.quantity}</Text>
                 </Col>
-                <Col span={4} className="order-item-price">
+                <Col span={8} className="order-item-price">
                   <Text strong>${(item.price * item.quantity).toFixed(2)}</Text>
                 </Col>
               </Row>

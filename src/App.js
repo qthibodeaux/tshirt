@@ -9,6 +9,8 @@ import {
 import { Layout as LayoutAnt } from 'antd';
 import {
   Admin,
+  AdminOrders,
+  AdminRoute,
   AuthCallback,
   Cart,
   CartSummaryPage,
@@ -30,7 +32,22 @@ const routing = createHashRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route path="/" element={<Home />} />
-      <Route path="/admin" element={<Admin />} />
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <Admin />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/orders/:orderId"
+        element={
+          <AdminRoute>
+            <AdminOrders />
+          </AdminRoute>
+        }
+      />
       <Route path="/cart" element={<Cart />} />
       <Route path="/cart-summary" element={<CartSummaryPage />} />
       <Route path="/checkout" element={<Checkout />} />

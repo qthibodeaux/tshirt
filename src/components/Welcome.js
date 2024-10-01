@@ -16,6 +16,7 @@ const { Title } = Typography;
 const { Option } = Select;
 
 const stateOptions = [
+  'Texas',
   'Alabama',
   'Alaska',
   'Arizona',
@@ -58,7 +59,6 @@ const stateOptions = [
   'South Carolina',
   'South Dakota',
   'Tennessee',
-  'Texas',
   'Utah',
   'Vermont',
   'Virginia',

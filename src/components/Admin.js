@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supaClient } from '../supabaseClient';
 import { List, Typography } from 'antd';
+import '../styles/Admin.css';
 
 const { Title } = Typography;
 
@@ -8,6 +10,7 @@ const AdminPage = () => {
   const [pendingEmails, setPendingEmails] = useState([]);
   const [allEmails, setAllEmails] = useState([]);
   const [pendingOrders, setPendingOrders] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,34 +50,50 @@ const AdminPage = () => {
     fetchData();
   }, []);
 
+  const handleOrderClick = (order) => {
+    navigate(`/admin/orders/${order.order_id}`, { state: { order } });
+  };
+
   return (
-    <div>
-      <Title level={2}>Admin Page</Title>
-      <div>
-        <Title level={3}>Pending Emails</Title>
+    <div className="admin-container">
+      <Title level={2} className="admin-title">
+        Admin Page
+      </Title>
+
+      <div className="admin-section">
+        <Title level={3} className="admin-section-title">
+          Pending Emails
+        </Title>
         <List
           bordered
           dataSource={pendingEmails}
           renderItem={(email) => <List.Item>{email}</List.Item>}
         />
       </div>
-      <div>
-        <Title level={3}>All Emails</Title>
+
+      <div className="admin-section">
+        <Title level={3} className="admin-section-title">
+          All Emails
+        </Title>
         <List
           bordered
           dataSource={allEmails}
           renderItem={(email) => <List.Item>{email}</List.Item>}
         />
       </div>
-      <div>
-        <Title level={3}>Pending Orders</Title>
+
+      <div className="admin-section">
+        <Title level={3} className="admin-section-title">
+          Pending Orders
+        </Title>
         <List
           bordered
           dataSource={pendingOrders}
           renderItem={(order) => (
-            <List.Item>
-              Order ID: {order.order_id} | Total: ${order.total_amount} | Date:{' '}
-              {new Date(order.order_date).toLocaleString()}
+            <List.Item onClick={() => handleOrderClick(order)}>
+              <span className="admin-order-id">Order ID: {order.order_id}</span>
+              <span className="admin-total">Total: ${order.total_amount}</span>
+              <span>Date: {new Date(order.order_date).toLocaleString()}</span>
             </List.Item>
           )}
         />

@@ -6,7 +6,7 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 import { useRecoilValue } from 'recoil';
-import { sessionState } from '../atoms/state'; // Assuming sessionState is your session atom
+import { sessionState } from '../atoms/state';
 import { useNavigate } from 'react-router-dom';
 import { supaClient } from '../supabaseClient';
 import '../styles/CustomDrawer.css';
@@ -14,21 +14,21 @@ import '../styles/CustomDrawer.css';
 const { Title } = Typography;
 
 const CustomDrawer = ({ visible, onClose }) => {
-  const session = useRecoilValue(sessionState); // Check session state
+  const session = useRecoilValue(sessionState);
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState('');
+  const [role, setRole] = useState(''); // Added state for user role
   const [loading, setLoading] = useState(true);
 
   const handleNavigate = (path) => {
     navigate(path);
-    onClose(); // Close the drawer after navigation
+    onClose();
   };
 
-  // Sign-out function
   const handleSignOut = async () => {
     await supaClient.auth.signOut();
-    navigate('/'); // Redirect to home or another page after signout
-    onClose(); // Close the drawer after signout
+    navigate('/');
+    onClose();
   };
 
   useEffect(() => {
@@ -42,6 +42,7 @@ const CustomDrawer = ({ visible, onClose }) => {
           .single();
 
         setFirstName(data?.first_name || '');
+        setRole(data?.role || ''); // Fetch the role
       }
       setLoading(false);
     };
@@ -56,9 +57,8 @@ const CustomDrawer = ({ visible, onClose }) => {
       closable={false}
       onClose={onClose}
       visible={visible}
-      bodyStyle={{ padding: 0 }} // Customize body padding
+      bodyStyle={{ padding: 0 }}
     >
-      {/* Header Row with X, Home, and Cog Icons */}
       <Row className="drawer-header" justify="space-between" align="middle">
         <Col>
           <Button
@@ -83,7 +83,6 @@ const CustomDrawer = ({ visible, onClose }) => {
         </Col>
       </Row>
 
-      {/* Welcome message if user is logged in and has a first name */}
       {loading ? (
         <Row justify="center" align="middle">
           <Spin />
@@ -102,9 +101,7 @@ const CustomDrawer = ({ visible, onClose }) => {
       )}
 
       <Row className="drawer-content">
-        {/* Check if the user is logged in or not */}
         {!session ? (
-          // If no session, show "Join" button centered
           <Col span={24} className="center-content">
             <Button
               type="default"
@@ -115,7 +112,6 @@ const CustomDrawer = ({ visible, onClose }) => {
             </Button>
           </Col>
         ) : (
-          // If session exists, show profile, products, and cart buttons
           <Col className="drawer-button">
             <Row className="drawer-row">
               <Button
@@ -147,7 +143,17 @@ const CustomDrawer = ({ visible, onClose }) => {
                 Cart
               </Button>
             </Row>
-            {/* Sign-out button below Cart */}
+            <Row className="drawer-row">
+              <Button
+                type="default"
+                block
+                onClick={() => handleNavigate('/admin')}
+                className="drawer-button"
+                style={{ display: role === 'admin' ? 'block' : 'none' }} // Admin button
+              >
+                Admin
+              </Button>
+            </Row>
             <Row className="drawer-row">
               <Button
                 type="default"

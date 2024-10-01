@@ -73,7 +73,6 @@ const CheckoutPage = () => {
   };
 
   const handleGuestCheckout = async () => {
-    // Handle guest checkout process with Supabase insert logic
     await handleSubmitOrder(null); // For guest checkout, we pass null for user_id
   };
 
@@ -149,9 +148,9 @@ const CheckoutPage = () => {
       // Navigate to order confirmation page and pass order number via state
       navigate('/order-confirmation', {
         state: {
-          orderNumber: orderNumber, // Ensure this matches the key in OrderConfirmation
-          orderItems: cartItems, // This must be orderItems to match the component
-          totalAmount: totalPrice, // Ensure totalAmount is passed correctly
+          orderNumber: orderNumber,
+          orderItems: cartItems, // Match this with OrderConfirmation component
+          totalAmount: totalPrice,
         },
       });
     } catch (error) {
@@ -169,7 +168,7 @@ const CheckoutPage = () => {
         itemLayout="horizontal"
         dataSource={cartItems}
         renderItem={(item) => (
-          <List.Item>
+          <List.Item className="cart-item">
             <Row className="cart-item-row" gutter={16}>
               <Col span={4}>
                 <img
@@ -265,12 +264,17 @@ const CheckoutPage = () => {
               <Divider />
               <Text strong>Total: ${totalPrice.toFixed(2)}</Text>
               <div className="button-row">
-                <Button type="primary" onClick={handleProfileEdit}>
+                <Button
+                  type="primary"
+                  onClick={handleProfileEdit}
+                  className="checkout-button"
+                >
                   Edit Profile
                 </Button>
                 <Button
                   type="primary"
                   onClick={() => handleSubmitOrder(profile)}
+                  className="checkout-button"
                 >
                   Submit Order
                 </Button>

@@ -51,16 +51,17 @@
 .product-button {
   width: 150px;
   height: 40px;
+  font-weight: bold; /* Make the font bold */
 }
 
 .cart-button {
-  background-color: #1890ff;
-  color: white;
-  border: none;
+  background-color: #000; /* Black background */
+  color: white; /* White text */
+  border: 1px solid white; /* White border */
 }
 
 .product-button {
-  background-color: #f5f5f5;
-  color: #1890ff;
-  border: 1px solid #1890ff;
+  background-color: transparent; /* Transparent background */
+  color: black; /* Black text */
+  border: 1px solid black; /* Black border */
 }

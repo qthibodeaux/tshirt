@@ -1,4 +1,6 @@
 import Admin from './Admin';
+import AdminOrders from './AdminOrders';
+import AdminRoute from './AdminRoute';
 import AuthCallback from './AuthCallback';
 import Cart from './Cart';
 import CartSummaryPage from './CartSummary';
@@ -16,6 +18,8 @@ import Welcome from './Welcome';
 
 export {
   Admin,
+  AdminOrders,
+  AdminRoute,
   AuthCallback,
   Cart,
   CartSummaryPage,

@@ -18,8 +18,10 @@ CREATE TABLE orders (
   total_amount numeric(10, 2) NOT NULL, -- Total order amount
   shipping_address text, -- Optional shipping address (can differ from profile address)
   status text DEFAULT 'pending', -- Status of the order
+  order_number VARCHAR(6) UNIQUE NOT NULL, -- Generated order number (e.g., 12345A)
   CONSTRAINT valid_status CHECK (status IN ('pending', 'shipped', 'delivered', 'cancelled'))
 );
+
 
 -- Drop the product_id reference from order_items and store product details directly
 CREATE TABLE order_items (
@@ -32,10 +34,6 @@ CREATE TABLE order_items (
   quantity int NOT NULL, -- Quantity of this item
   price numeric(10, 2) NOT NULL -- Price of the product item
 );
-
-
-
-
 
 -- Policies for user_profiles
 CREATE POLICY "all can see" ON "public"."user_profiles"
@@ -76,5 +74,5 @@ ADD COLUMN is_guest boolean DEFAULT false, -- New column to indicate if this is 
 ADD COLUMN guest_email text, -- Optional email for guest users
 ALTER COLUMN user_id DROP NOT NULL; -- Allow user_id to be null for guest orders
 
-ALTER TABLE orders
-ADD COLUMN order_number VARCHAR(6) UNIQUE NOT NULL;
+ALTER TABLE user_profiles
+ADD COLUMN role text CHECK (role IN ('user', 'admin')) DEFAULT 'user';
